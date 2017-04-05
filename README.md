@@ -29,3 +29,4 @@ sudo systemctl restart domoticz
 
 You can now add the Sonos hardware in Domoticz
 
+

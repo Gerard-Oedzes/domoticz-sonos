@@ -9,6 +9,8 @@
 <plugin key="domoticz-sonos" name="Sonos (With http api)" author="Wobbles" version="1.0.1" externallink="http://www.sonos.com/">
     <params>
         <param field="Address" label="IP Address" width="200px" required="true" default="127.0.0.1" />	
+	<param field="Port" label="Port" width="10px" required="true" default="5005" />
+
         <param field="Mode1" label="Poll interval" width="100px" required="true" default=10 />        
         
         <param field="Mode6" label="Debug" width="75px">
@@ -89,7 +91,8 @@ class BasePlugin:
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
-        Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
+        # Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
+        return
 
     def onDisconnect(self):
         Domoticz.Log("onDisconnect called")
@@ -101,6 +104,7 @@ class BasePlugin:
 
     def SendMessage(self, command):
         if ( self.isConnected == False ):
+            self.Port = Paramters["Port"]
             Domoticz.Transport(Transport="TCP/IP", Address=Parameters["Address"], Port=self.Port)
             Domoticz.Protocol("HTTP")        
             Domoticz.Connect()
