@@ -104,7 +104,7 @@ class BasePlugin:
 
     def SendMessage(self, command):
         if ( self.isConnected == False ):
-            self.Port = Paramters["Port"]
+            self.Port = Parameters["Port"]
             Domoticz.Transport(Transport="TCP/IP", Address=Parameters["Address"], Port=self.Port)
             Domoticz.Protocol("HTTP")        
             Domoticz.Connect()
@@ -128,13 +128,19 @@ class BasePlugin:
 
         for Sonos in (0, int(self.SonosCount)-1):
             try:
-                Domoticz.Log("Sonos ID: " + str(Sonos))
-                Name = jsonData[Sonos]["coordinator"]["roomName"]
-                Value = jsonData[Sonos]["coordinator"]["state"]["volume"]
-                Mute = jsonData[Sonos]["coordinator"]["state"]["mute"]
-                State = jsonData[Sonos]["coordinator"]["state"]["playbackState"]
+                if ( Sonos+1 not in Devices ):
+                    Domoticz.Log("Sonos ID: " + str(Sonos))
+                    sonName = jsonData[Sonos]["coordinator"]["roomName"]
+                    sonValue = jsonData[Sonos]["coordinator"]["state"]["volume"]
+                    sonMute = jsonData[Sonos]["coordinator"]["state"]["mute"]
+                    sonState = jsonData[Sonos]["coordinator"]["state"]["playbackState"]
+
+                    Domoticz.Device(Name=sonName, Unit=Sonos+1, TypeName="Switch").Create()
+                    Domoticz.Log("Added Sonos " + sonName)                    
+                    
+                # Set the current state
+                # TODO: Create this...
                 
-                Domoticz.Log("Adding Sonos " + Name)
             except:
                 Domoticz.Error("Error adding Sonos " + Name)
 
